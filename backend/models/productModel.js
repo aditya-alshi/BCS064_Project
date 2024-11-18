@@ -1,4 +1,3 @@
-const { query } = require('express');
 const { connection } = require('../lib/db') // getting connection configuration of mysql from the db.js
 
 const Products = {
@@ -13,7 +12,8 @@ const Products = {
         const query =  `
             SELECT pi.image_url, pi.product_id, pd.product_name, pd.product_description 
             FROM products pd INNER JOIN product_images pi 
-            ON pd.id = pi.product_id
+            ON pd.product_id = pi.product_id
+            WHERE pd.approval_status="approved"
         `
         connection.query(query, callback)
     }
