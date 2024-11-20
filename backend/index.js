@@ -1,12 +1,17 @@
 const express = require("express");
 const app = express();
 const cors = require('cors');
-app.use(express.json())
+const cookieParser = require('cookie-parser')
+// app.use(cors());
 app.use(cors());
-
-const { getAllProducts } = require("./controllers/productController");
+app.use(express.json())
+const { getAllProducts, addNewProduct } = require("./controllers/productController");
 const { Products, ProductImage } = require("./models/productModel");
 const { validateUserLogin, registerSeller } = require("./controllers/userController");
+const { verifySellerLoginMW } = require("./lib/middleware");
+
+const multer  = require('multer')
+const upload = multer({ dest: './public/data/uploads/' })
 
 // NEED TO BUILD BASIC AUTHENTICATION
     // build a middleware for validating login(check backend\lib\middleware.js)
@@ -17,6 +22,12 @@ app.get("/all-products", getAllProducts);
 app.post('/seller/login', validateUserLogin);
 
 app.post('/seller/register', registerSeller);
+
+app.post('/seller/addNewProduct',verifySellerLoginMW, upload.single('productImage'), addNewProduct)
+
+app.get('/joker/token', verifySellerLoginMW, (req, res) => {
+    console.log(req.user);
+})
 
 // app.post('/seller/editprofile', )
 

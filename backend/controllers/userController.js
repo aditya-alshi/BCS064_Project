@@ -1,14 +1,16 @@
 const { User } = require("../models/userModel");
+require('dotenv').config(); 
+
+const jwt = require('jsonwebtoken');
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const { v4: uuidv4 } = require("uuid");
 const { Seller, SellerStoreAddress } = require("../models/sellerModel");
-
+const JWT_PRIVATE_KEY = process.env.JWT_SECRET_PRIVATE_KEY
 
 // CONTROLLERS
 async function validateUserLogin(req, res) {
   const { email, password } = req.body;
-  console.log(email, password);
 
   try {
     const results = await validateEmailHelper(email);
@@ -23,22 +25,38 @@ async function validateUserLogin(req, res) {
         message: "No account found for this email",
       });
     }
-    // console.log(results[0].password);
+    
     const userId = results[0].user_id;
-    const hashedPassword = await validatePasswordHelper(userId);
-    if (hashedPassword.length === 0) {
+    
+    const paswordHelperResult = await validatePasswordHelper(userId);
+    if (paswordHelperResult.length === 0) {
       return res.status(401).json({
         message: "Invalid ",
       });
     }
+
+    const [{ hashedPassword, seller_id }] = paswordHelperResult
+
+
     const isValidPassword = await bcrypt.compare(
       password,
-      hashedPassword[0].password
+      hashedPassword
     );
     if (isValidPassword) {
+      
+      const jwtToken = jwt.sign({
+        seller_id
+      },
+      JWT_PRIVATE_KEY,
+      { expiresIn: '1h'}
+    )
+
+
       return res.status(200).json({
         message: "Login succesfull",
+        jwtToken
       });
+
     } else {
       return res.status(401).json({
         message: "Invalid Password",
@@ -63,18 +81,7 @@ async function registerSeller(req, res) {
     country,
     zipCode,
   } = req.body;
-
-  const sam = [email,
-    password,
-    bussinessName,
-    phoneNumber,
-    addressLine1,
-    addressLine2,
-    city,
-    country,
-    zipCode,]
-
-  console.log(sam)
+  
 
   const userId = uuidv4();
 
@@ -141,7 +148,6 @@ async function registerSeller(req, res) {
       });
     }
   } catch (error) {
-    console.log(error);
     if (error.code === "DUPLICATE_ENTRY") {
       return res.status(409).json({
         message: error.message,
@@ -264,4 +270,6 @@ module.exports = {
   // with login request seller will send their email and since email is unique. we will query the seller table to
   // retrive the seller_id using that email. 
   // So basically querying the user table and join on seller table on user_id where the email address is "?" and
-  // and return the email and seller id or what ever it is. 
+  // and return the email and seller id or what ever it is.
+  // -- Solved -- 
+  // stored seller id in payload. Now all server actions can use it

@@ -5,7 +5,7 @@ import App from './App'
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Seller from './sellerSection/Seller';
-import ProductListing from './sellerSection/ProductListing';
+import ProductListing, { action as ProductListingAction } from './sellerSection/ProductListing';
 import Orders from './sellerSection/Orders';
 import Reviews from './sellerSection/Reviews';
 import ProductDetails from './sellerSection/lib/components/ProductDetails';
@@ -33,6 +33,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
+        action: ProductListingAction,
         element: <ProductListing />,
       },
       {

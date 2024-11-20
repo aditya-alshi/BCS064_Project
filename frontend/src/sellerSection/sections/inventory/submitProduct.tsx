@@ -1,17 +1,40 @@
-import { Form } from "react-router-dom"
+import { Form, useActionData } from "react-router-dom"
 
 export async function action ({ request }: { request: Request }){
     const formdata = await request.formData();
+    const jwtToken = JSON.parse(localStorage.getItem("jwtToken") || "");
+    let formOBject: Record<string, FormDataEntryValue> = {};
     Array.from(formdata.entries()).forEach(([key, value]) => {
-        console.log(key, value)
+        formOBject[key] = value;
     })
-    return formdata.get('productName')
+
+    const body = JSON.stringify({...formOBject})
+    const response = await fetch("http://localhost:5000/seller/addNewProduct",{
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        body: formdata,
+    })
+    const parsedResponse = await response.json();
+    console.log(parsedResponse)
+    return{ parsedResponse}
 }
 
 export default function SubmitProduct() {
+
+    const actionData = useActionData() as {
+        parsedResponse: {
+          message?: string;
+          error?: string;
+        };
+        statusCode: number;
+      };
+
     return (
         <section className="w-full flex justify-center items-center ">
-            <Form method="post">
+           {/* { actionData ? actionData.parsedResponse.message || actionData.parsedResponse.error: "" } */}
+            <Form method="post" encType='multipart/form-data'>
                 <p>
                     <label htmlFor="productName">
                         <span>Product Name: </span>
@@ -48,8 +71,14 @@ export default function SubmitProduct() {
                             <option value="murukku">Murukku</option>
                             <option value="sev">Sev</option>
                         </optgroup>
-
+                        
                     </select>
+                </p>
+                <p>
+                    <label htmlFor="stock">
+                        <span>Stock </span>
+                        <input required className="border" type="number" name="stock" id="stock" />    
+                    </label>
                 </p>
                 <p className="mt-4">
                     <button className=" active:outline-2 hover:scale-x-[1.025] py-1 w-full bg-lighterAccent text-white " type="submit">Submit</button>

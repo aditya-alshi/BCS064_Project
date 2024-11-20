@@ -13,7 +13,7 @@ const Products = {
             SELECT pi.image_url, pi.product_id, pd.product_name, pd.product_description 
             FROM products pd INNER JOIN product_images pi 
             ON pd.product_id = pi.product_id
-            WHERE pd.approval_status="approved"
+            WHERE pd.approval_status="pending"
         `
         connection.query(query, callback)
     }
@@ -27,18 +27,41 @@ const Products = {
             [productId],
             callback
         )
+    },
+
+
+    newProduct : (data, callback) => {
+        const query = `
+            INSERT INTO products (
+                product_id, product_name, product_description, category,  stock
+            ) VALUES (
+                ?, ?, ?, ?, ?
+            )
+        `
+        const { productId, productName, productDescription, category, stock } = data;
+        connection.query(
+            query, 
+            [ productId, productName, productDescription, category, stock ],
+            callback
+        )
     }
 }
 
 const ProductImage = {
-    // fetch all images
-    allImages: (callback) => {
-        const query =  `
-            SELECT pi.image_url, pi.product_id, pd.product_name, pd.product_description 
-            FROM products pd INNER JOIN product_images pi 
-            ON pd.id = pi.product_id
+    addNewImage: (data, callback) => {
+        const query = `
+            INSERT INTO product_images (
+                image_id, product_id, image_url
+            ) VALUES (
+                ?, ?, ? 
+            )
         `
-        connection.query(query, callback)
+        const { imageId, productId, productImageName } = data;
+        connection.query(
+            query,
+            [ imageId, productId, productImageName ],
+            callback
+        )
     }
 }
 

@@ -11,7 +11,10 @@ const User = {
 
     UserLoginPassword: (userId, callback) => {
         const query = `
-            SELECT password FROM user WHERE user_id=?
+            SELECT u.password AS hashedPassword, s.seller_id AS seller_id
+            FROM user u INNER JOIN seller s 
+            ON u.user_id=s.registered_user_id
+            WHERE u.user_id=?
         `
         connection.query(query, [userId], callback)
     },

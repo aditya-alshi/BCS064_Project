@@ -1,13 +1,35 @@
-//sellerLoginMW will check for username and password
-    // create a new USER model and add a new query function for seller login specifically
-    // for which first created a table users in the database (userId, username, password, role)
-    // since it is specifically a seller login the role must be seller
-    // a checkSellerLogin controller will be responsible for this task ()
-
-    // there should be a login page 
-    // if the user does not exist, register the user first and assign them an id. 
+const jwt = require('jsonwebtoken');
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
     
-export function sellerLoginMW(req, res, next){
-    const { username, password } = req.body;
-    const result = checkSellerLogin(username, password);
+function verifySellerLoginMW(req, res, next){
+    
+    const authHeader = req.headers['authorization'];
+    if(!authHeader) return res.status(401).json({
+        message: 'Unauthorized: No token provided'
+    });
+
+    const jwtToken = authHeader.split(" ")[1]
+    if(!jwtToken) {
+        return res.status(401).json({
+            message: 'Unauthorized: No token provided'
+        });
+    }
+
+    jwt.verify(jwtToken, process.env.JWT_SECRET_PRIVATE_KEY, (err, decoded)=> {
+        if(err) {
+            return res.status(401).json({
+                message: "Forbidden: Invalid token"
+            });
+        }
+
+        console.log(decoded)
+        req.seller_id = decoded;
+       console.log("Jwt verified succesfully")
+        next();
+    })
+
+
 }
+
+module.exports ={ verifySellerLoginMW};

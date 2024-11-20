@@ -2,7 +2,6 @@ import { Form, Link, redirect, useActionData } from "react-router-dom"
 
 export async function action({ request }: {request: Request}) {
     const formData = await request.formData();
-    console.log()
     const response = await fetch("http://localhost:5000/seller/login",{
         method: "POST",
         headers: {
@@ -14,10 +13,13 @@ export async function action({ request }: {request: Request}) {
         })
     })
 
-    if(response.status === 200) return redirect('/panel/seller/');
+    // if(response.status === 200) return redirect('/panel/seller/');
     const parsedResponse = await response.json();
+    const jwtToken = parsedResponse.jwtToken
+    localStorage.setItem('jwtToken', JSON.stringify(jwtToken))
     console.log(parsedResponse)
-    return parsedResponse
+    console.log("hello peh")
+    return redirect('/panel/seller/');
 }
 
 export default function Login () {

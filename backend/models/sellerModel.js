@@ -1,10 +1,13 @@
 const { connection } = require("../lib/db")
 
 const Seller = {
-    sellerProfile : (sellerId, callback) => {
+
+    sellerProfile : (data, callback) => {
         const query = `
-            
+            SELECT * FROM seller WHERE registered_user_id=?
         `
+        const { registeredUserId } = data;
+        connection.query(query, [ registeredUserId ], callback)
     },
 
     addSeller : (data, callback) =>{
