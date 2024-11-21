@@ -1,16 +1,16 @@
-import { allOrders } from "../../../data/dummyDB"
+
 
 export default function ManageOrders() {
     
-    const renderOrders = allOrders.map(order => (
-        <tr >
-            <td className="border border-collapse border-gray-300 p-1 text-start">{order.orderId}</td>
-            <td className="border border-collapse border-gray-300 p-1 text-start">{order.order_address}</td>
-            <td className="border border-collapse border-gray-300 p-1 text-start">{order.payment_mode}</td>
-            <td className="border border-collapse border-gray-300 p-1 text-start">{order.total_price}</td>
-            <td className="border border-collapse border-gray-300 p-1 text-start">{order.status}</td>
-        </tr>
-    ))
+    // const renderOrders = allOrders.map(order => (
+    //     <tr >
+    //         <td className="border border-collapse border-gray-300 p-1 text-start">{order.orderId}</td>
+    //         <td className="border border-collapse border-gray-300 p-1 text-start">{order.order_address}</td>
+    //         <td className="border border-collapse border-gray-300 p-1 text-start">{order.payment_mode}</td>
+    //         <td className="border border-collapse border-gray-300 p-1 text-start">{order.total_price}</td>
+    //         <td className="border border-collapse border-gray-300 p-1 text-start">{order.status}</td>
+    //     </tr>
+    // ))
 
     return (
         <section className="w-[86%] m-auto">
@@ -25,7 +25,7 @@ export default function ManageOrders() {
                     </tr>
                 </thead>
                 <tbody>
-                    { renderOrders }
+                    {/* { renderOrders } */}
                 </tbody>
             </table>
         </section>

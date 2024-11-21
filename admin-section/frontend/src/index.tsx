@@ -3,13 +3,16 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import ManageProducts from './sections/main/products/ManageProducts';
-import ManageSellers from './sections/main/sellers/ManageSellers';
-import ManageCustomers from './sections/main/customers/ManageCustomers';
-import ManageOrders from './sections/main/orders/ManageOrders';
-import ProductDetails from './sections/main/products/ProductDetails';
+import ManageProducts, { loader as ManageProductLoader } from './sections/main/products/ManageProducts';
+// import ManageSellers from './sections/main/sellers/ManageSellers';
+// import ManageCustomers from './sections/main/customers/ManageCustomers';
+// import ManageOrders from './sections/main/orders/ManageOrders';
+// import ProductDetails from './sections/main/products/ProductDetails';
 
-import { loader as ProductDetailsLoader } from './sections/main/products/ProductDetails'
+// import { loader as ProductDetailsLoader } from './sections/main/products/ProductDetails'
+import Login, { action as adminLoginAction } from './sections/login/Login';
+import JokerComponent, { action as jokerAction } from './components/JokerComponent';
+import { loader, action as ManageProductAction } from './sections/main/products/ManageProducts';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -17,31 +20,43 @@ const root = ReactDOM.createRoot(
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/admin/main",
     element: <App />,
     children: [
       {
         index: true,
+        action: ManageProductAction,
+        loader: ManageProductLoader,
         element: <ManageProducts />
       },
-      {
-        path: 'sellers',
-        element: <ManageSellers />
-      },
-      {
-        path: 'customers',
-        element: <ManageCustomers />
-      },
-      {
-        path: "orders",
-        element: <ManageOrders />
-      },
-      {
-        path: 'product/:product_id',
-        loader: ProductDetailsLoader,
-        element: <ProductDetails />
-      }
+      // {
+      //   path: 'joker',
+      //   action: jokerAction,
+      //   element: <JokerComponent />
+      // },
+      // {
+      //   path: 'sellers',
+      //   element: <ManageSellers />
+      // },
+      // {
+      //   path: 'customers',
+      //   element: <ManageCustomers />
+      // },
+      // {
+      //   path: "orders",
+      //   element: <ManageOrders />
+      // },
+      // {
+      //   path: 'product/:product_id',
+      //   loader: ProductDetailsLoader,
+      //   element: <ProductDetails />
+      // }
     ]
+  },
+  {
+    path: '/',
+    action: adminLoginAction,
+    element: <Login />
   }
 ])
 

@@ -10,7 +10,7 @@ const {
     S3Client,
     GetObjectCommand,
     PutObjectCommand,
-    ListObjectsCommand,
+    DeleteObjectCommand,
   } = require("@aws-sdk/client-s3");
 
   const s3Client = new S3Client({});
@@ -50,7 +50,7 @@ async function s3Uploader(productFileObj) {
 
 module.exports = {
     getSignedDownloadUrl,
-    s3Uploader
+    s3Uploader,
 }
 
 

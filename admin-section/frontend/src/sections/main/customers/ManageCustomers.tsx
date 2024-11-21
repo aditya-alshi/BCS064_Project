@@ -1,13 +1,13 @@
-import { allCustomers } from "../../../data/dummyDB"
+// import { allCustomers } from "../../../data/dummyDB"
 
 export default function ManageCustomers() {
 
-    const renderCustomers = allCustomers.map(customer => (
-        <tr className="text-start">
-            <td className="border border-collapse border-gray-300 p-1">{customer.name}</td>
-            <td className="border border-collapse border-gray-300 p-1">{customer.email}</td>
-        </tr>
-    ))
+    // const renderCustomers = allCustomers.map(customer => (
+    //     <tr className="text-start">
+    //         <td className="border border-collapse border-gray-300 p-1">{customer.name}</td>
+    //         <td className="border border-collapse border-gray-300 p-1">{customer.email}</td>
+    //     </tr>
+    // ))
 
     return (
         <section className="w-[86%] m-auto">
@@ -18,9 +18,9 @@ export default function ManageCustomers() {
                         <th className="border border-collapse border-gray-300 p-1">Email</th>
                     </tr>
                 </thead>
-                <tbody>
+                {/* <tbody>
                     { renderCustomers }
-                </tbody>
+                </tbody> */}
             </table>
         </section>
     )

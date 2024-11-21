@@ -1,29 +1,29 @@
 import { useLoaderData } from "react-router-dom";
-import { getProductById } from "../../../data/data";
-import { Products } from "../../../types/productsTypes";
+// import { getProductById } from "../../../data/data";
+import { Product } from "../../../types/productsTypes";
 
-export async function loader({ params }: { params:{ product_id?: string } }) {
+// export async function loader({ params }: { params:{ product_id?: string } }) {
     
-    const productDetails = await (async () => {
-            if(!params.product_id) return "Invalid Id"
-            const response = getProductById(params.product_id)
-            return response;
-        })();
-        return productDetails
-}
+//     const productDetails = await (async () => {
+//             if(!params.product_id) return "Invalid Id"
+//             const response = getProductById(params.product_id)
+//             return response;
+//         })();
+//         return productDetails
+// }
 export default function ProductDetails() {
 
-    const response = useLoaderData() as Products | string;
-    if(typeof response === "string") {
-        return <h1>{response}</h1>
-    }
+    // const response = useLoaderData() as Product | string;
+    // if(typeof response === "string") {
+    //     return <h1>{response}</h1>
+    // }
 
     return (
         <section>
-            <img className="w-16" src={response.product_image || ""} alt="product image" />
+            {/* <img className="w-16" src={response.product_image || ""} alt="product image" /> */}
             <table>
                 <tbody>
-                    <tr>
+                    {/* <tr>
                         <th>Product Id</th>
                         <td>{response.product_id}</td>
                     </tr>
@@ -41,11 +41,11 @@ export default function ProductDetails() {
                     </tr>
                     <tr>
                         <th>Category name</th>
-                        <td>{response.category.name}</td>
+                        <td>{response.category || ""}</td>
                     </tr>
                     <tr>
                         <th>Category type</th>
-                        <td>{response.category.type}</td>
+                        <td>{response.category || ""}</td>
                     </tr>
                     <tr>
                         <th>Seller Id</th>
@@ -54,11 +54,11 @@ export default function ProductDetails() {
                     <tr>
                         <th>Seller Name</th>
                         <td>{"Seller Name"}</td>
-                    </tr>
-                    <tr>
+                    </tr> */}
+                    {/* <tr>
                         <th>Price</th>
                         <td>{response.price}</td>
-                    </tr>
+                    </tr> */}
                 </tbody>
             </table>
         </section>

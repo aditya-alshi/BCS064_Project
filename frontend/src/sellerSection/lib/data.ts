@@ -105,4 +105,4 @@ const reviewList: Review[] = [
     },
 ]
 
-export { inventoryProducts, orderList, reviewList }
+export { inventoryProducts, orderList, reviewList, }
