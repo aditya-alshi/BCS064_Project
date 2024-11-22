@@ -12,7 +12,7 @@ import ManageProducts, { loader as ManageProductLoader } from './sections/main/p
 // import { loader as ProductDetailsLoader } from './sections/main/products/ProductDetails'
 import Login, { action as adminLoginAction } from './sections/login/Login';
 import JokerComponent, { action as jokerAction } from './components/JokerComponent';
-import { loader, action as ManageProductAction } from './sections/main/products/ManageProducts';
+import { action as ManageProductAction } from './sections/main/products/ManageProducts';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

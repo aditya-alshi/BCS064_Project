@@ -3,13 +3,28 @@ const { Product } = require("../models/productModel");
 
 async function fetchAllProducts(req, res) {
   try {
-    const allProductResult = await allProductHelper();
+
+    const pageNo = parseInt(req.params.pageNo)
+    const totalRowsResult = await totalRowsCount();
+    if (!Array.isArray(totalRowsResult) || totalRowsResult.length === 0) {
+      return res.status(404).json({
+        error: "No Products found",
+      });
+    }
+
+    const [ { totalRows } ] = totalRowsResult;
+
+
+    const allProductResult = await allProductHelper({ pageNo });
+    
     if (!Array.isArray(allProductResult) || allProductResult.length === 0) {
       return res.status(404).json({
         error: "No Products found",
       });
     }
     return res.status(200).json({
+      totalPages: Math.ceil(totalRows/10),
+      pageNo,
       allProducts: allProductResult,
     });
   } catch (error) {
@@ -17,6 +32,10 @@ async function fetchAllProducts(req, res) {
       error: "Something went wrong. Try again later",
     });
   }
+}
+
+async function fetchProductById(req, res) {
+  
 }
 
 async function deleteAProduct(req, res) {
@@ -64,13 +83,27 @@ async function deleteAProduct(req, res) {
 }
 
 // HELPER FUNCTIONs
-function allProductHelper() {
+
+function totalRowsCount() {
   return new Promise((resolve, reject) => {
-    Product.allProduct((error, results) => {
+    Product.totalCount((error, results) => {
+      if(error) {
+        return reject({
+          error: error
+        })
+      } 
+      return resolve(results);
+    })
+  })
+}
+
+function allProductHelper(data) {
+  return new Promise((resolve, reject) => {
+    Product.allProduct(data, (error, results) => {
       if (error)
-        return {
-          error: error.message,
-        };
+        return reject({
+          error: error
+        })
       resolve(results);
     });
   });

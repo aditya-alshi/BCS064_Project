@@ -1,11 +1,21 @@
 const { connection } = require("../lib/db")
 
 const Product = {
-    allProduct : (callback) => {
+
+    totalCount: (callback)  => {
         const query = `
-            SELECT * FROM products
+            SELECT COUNT(*) AS totalRows FROM products
         `
-        connection.query(query, callback);
+        connection.query(query, callback)
+    },
+
+    allProduct : (data , callback) => {
+        const query = `
+            SELECT * FROM products LIMIT ?, ?
+        `
+        const { pageNo } = data
+        const offset = (pageNo - 1) * 10
+        connection.query(query, [offset, 10], callback);
     },
 
     productImage: (data, callback) => {

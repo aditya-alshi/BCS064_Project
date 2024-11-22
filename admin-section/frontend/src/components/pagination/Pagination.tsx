@@ -1,19 +1,21 @@
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function Pagination({handlePageNo, pageNo}: {
-  handlePageNo: (e: number) => void,
+
+export default function Pagination({totalPages, pageNo}: {
+  totalPages: number,
   pageNo: number
 }) {
   
+  const navigate = useNavigate();
+  const handlePageChange = (newPageNo: number) => {
+    navigate(`/admin/main?pageNo=${newPageNo}`)
+  }
 
-  const renderPages = [...Array(4)].map((page, index) => (
+  const renderPages = [...Array(totalPages)].map((_, index) => (
     <li
-      key={index + 1}
-      className={`m-1 hover:scale-125 cursor-pointer  ${
-        pageNo === index + 1 ? "text-accent underline" : ""
-      }`}
-      onClick={() => handlePageNo(index+1)}
-    >
+      className={`${index+1 === pageNo? "underline": ""} hover:scale-125 cursor-pointer`}
+      onClick={() => handlePageChange(index+1)}
+    key={index}>
       {index + 1}
     </li>
   ));
@@ -21,26 +23,24 @@ export default function Pagination({handlePageNo, pageNo}: {
     <nav className="">
       <ul className="flex gap-4 justify-center">
         <button
-          onClick={() => handlePageNo(pageNo - 1)}
+          onClick={() => handlePageChange(pageNo - 1)}
           disabled={pageNo === 1}
-          type="button"
           className="inline-block hover:scale-125 cursor-pointer active:font-extrabold"
         >
           {"<"}
         </button>
         {renderPages}
-        <button
-          onClick={() => {
-            console.log("Next clicked");
-            handlePageNo(pageNo + 1)
-          }}
-          disabled={pageNo === 4}
-          type="button"
-          className="inline-block hover:scale-125 cursor-pointer active:font-extrabold"
-        >
-          {">"}
-        </button>
+          <button
+            name="intent"
+            value={"changePageNo"}
+            onClick={() => handlePageChange(pageNo + 1)}
+            disabled={pageNo === totalPages}
+            className="inline-block hover:scale-125 cursor-pointer active:font-extrabold"
+          >
+            {">"}
+          </button>
       </ul>
+      
     </nav>
   );
 }

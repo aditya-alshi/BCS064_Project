@@ -13,7 +13,9 @@ app.use(express.json())
 
 app.post('/shh-xxx-hss/admin/login', validateAdminLogin)
 
-app.get('/shh-xxx-hss/admin/all-products', fetchAllProducts)
+app.get('/shh-xxx-hss/admin/all-products/:pageNo', fetchAllProducts)
+
+// app.get('/shh-xxx-hss/admin/products/details/:product_id', fetchProductById)
 
 app.post('/shh-xxx-hss/admin/products/delete/:product_id', deleteAProduct)
 
