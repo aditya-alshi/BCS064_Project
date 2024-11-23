@@ -17,6 +17,7 @@ import Register, { action as registerAction } from './sellerSection/sections/reg
 import SubmitProduct, { action as submitProductAction} from './sellerSection/sections/inventory/submitProduct';
 import ProfilePage from './sellerSection/sections/profile/ProfilePage';
 import EditProfile from './sellerSection/sections/profile/EditProfle';
+import CustomerProductDetails , { loader as CustomerProductDetailsLoader } from './lib/components/sections/productDetails/CustomerProductDetails';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -26,6 +27,19 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <App />
+  },
+  {
+    path: '/product',
+    children: [
+      {
+        index: true,
+        element: <CustomerProductDetails />,
+        loader: CustomerProductDetailsLoader
+      },
+      {
+        path: 'cart',
+      }
+    ]
   },
   {
     path: "/panel/seller",

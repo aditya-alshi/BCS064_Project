@@ -11,10 +11,12 @@ const JWT_PRIVATE_KEY = process.env.JWT_SECRET_PRIVATE_KEY
 // CONTROLLERS
 async function validateUserLogin(req, res) {
   const { email, password } = req.body;
+  
 
   try {
     const results = await validateEmailHelper(email);
 
+    console.log(results)
     if (results.message) {
       return res.status(401).json({
         message: results.message,
@@ -64,7 +66,7 @@ async function validateUserLogin(req, res) {
     }
   } catch (error) {
     res.status(500).json({
-      error: error.message,
+      error: error,
     });
   }
 }

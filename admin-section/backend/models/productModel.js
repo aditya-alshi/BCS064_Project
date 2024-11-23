@@ -18,6 +18,14 @@ const Product = {
         connection.query(query, [offset, 10], callback);
     },
 
+    productById: (data, callback) => {
+        const query = `
+            SELECT * FROM products WHERE product_id=?
+        `
+        const { productId } = data;
+        connection.query(query, [ productId ], callback);
+    },
+
     productImage: (data, callback) => {
         
         const query = `
@@ -37,6 +45,16 @@ const Product = {
         `
         const { productId } = data;
         connection.query(query, [ productId ], callback)
+    },
+
+    changeApprovalStatus : (data, callback) => {
+        const query = `
+            UPDATE products 
+            SET approval_status=?
+            WHERE product_id=?
+        `
+        const { approvalStatus, productId } = data;
+        connection.query(query, [ approvalStatus, productId ], callback)
     }
 }
 

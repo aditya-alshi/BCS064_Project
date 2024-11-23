@@ -28,6 +28,26 @@ const Seller = {
             bussinessName,
             phoneNumber 
         ], callback)
+    },
+
+    sellerById : (data, callback) => {
+        const query = `
+            SELECT sl.bussiness_name as businessName,
+             sl.phone_number as phoneNumber,
+             sladd.address_line_1 as addressLineOne,
+             sladd.address_line_2 as addressLineTwo,
+             sladd.city as city,
+             sladd.country as country,
+             sladd.zip_code as zipCode
+             FROM seller sl INNER JOIN seller_store_address sladd ON sl.seller_id=sladd.seller_id
+             WHERE sl.seller_id=?
+        `
+        const { sellerId } = data;
+        connection.query(
+            query,
+            [ sellerId ],
+            callback
+        )
     }
 }
 

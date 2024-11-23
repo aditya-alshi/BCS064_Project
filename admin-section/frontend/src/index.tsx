@@ -7,11 +7,10 @@ import ManageProducts, { loader as ManageProductLoader } from './sections/main/p
 // import ManageSellers from './sections/main/sellers/ManageSellers';
 // import ManageCustomers from './sections/main/customers/ManageCustomers';
 // import ManageOrders from './sections/main/orders/ManageOrders';
-// import ProductDetails from './sections/main/products/ProductDetails';
+import ProductDetails, { loader as ProductDetailsLoader, action as ProductDetailsAction } from './sections/main/products/ProductDetails';
 
-// import { loader as ProductDetailsLoader } from './sections/main/products/ProductDetails'
 import Login, { action as adminLoginAction } from './sections/login/Login';
-import JokerComponent, { action as jokerAction } from './components/JokerComponent';
+import JokerComponent, { action, action as jokerAction } from './components/JokerComponent';
 import { action as ManageProductAction } from './sections/main/products/ManageProducts';
 
 const root = ReactDOM.createRoot(
@@ -46,11 +45,12 @@ const router = createBrowserRouter([
       //   path: "orders",
       //   element: <ManageOrders />
       // },
-      // {
-      //   path: 'product/:product_id',
-      //   loader: ProductDetailsLoader,
-      //   element: <ProductDetails />
-      // }
+      {
+        path: 'product/:product_id',
+        loader: ProductDetailsLoader,
+        action: ProductDetailsAction,
+        element: <ProductDetails />
+      }
     ]
   },
   {

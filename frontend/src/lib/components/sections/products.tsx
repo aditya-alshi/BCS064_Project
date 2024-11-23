@@ -2,6 +2,7 @@ import AddToCart from "../buttons/AddToCart";
 import { useState, useEffect } from "react";
 import { FaRegStar, FaRegStarHalf, FaStar } from "react-icons/fa";
 import Pagination from "../buttons/Pagination";
+import { Link } from "react-router-dom";
 
 
 export default function Product() {
@@ -35,7 +36,7 @@ export default function Product() {
             />
         </div>
       <div className=" *:mt-2">
-        <p className=" text-berkeleyBlue">{imagepath.product_name}</p>
+        <Link to={`/product?productId=${imagepath.product_id}`} className=" text-berkeleyBlue cursor-pointer">{imagepath.product_name}</Link>
         <p className="flex w-1/2 gap-1">
             {[...Array(5)].map((start, index) => (
                 <FaRegStar key={index} size={"20"} />

@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser')
 // app.use(cors());
 app.use(cors());
 app.use(express.json())
-const { getAllProducts, addNewProduct } = require("./controllers/productController");
+const { getAllProducts, addNewProduct, getProductById } = require("./controllers/productController");
 const { Products, ProductImage } = require("./models/productModel");
 const { validateUserLogin, registerSeller } = require("./controllers/userController");
 const { verifySellerLoginMW } = require("./lib/middleware");
@@ -18,6 +18,7 @@ const upload = multer({ dest: './public/data/uploads/' })
 
 
 app.get("/all-products", getAllProducts);
+app.get('/product/detail/:productId', getProductById);
 
 app.post('/seller/login', validateUserLogin);
 

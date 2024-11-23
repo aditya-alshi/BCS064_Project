@@ -50,7 +50,7 @@ export default function Products() {
     const renderAllProducts = allProducts.map(product => (
         <tr key={product.product_id}>
             <td className="border border-gray-300 p-1 text-start underline hover:no-underline">
-                <Link className=" " to={`/product/${product.product_id}`}>
+                <Link className=" " to={`product/${product.product_id}`}>
                     {product.product_name}  
                 </Link>
             </td>
@@ -67,7 +67,7 @@ export default function Products() {
 
     return (
         <section className="w-[86%] m-auto ">
-            <table className="w-full border border-collapse border-gray-300">
+            <table className="min-h-[75vh] w-full border border-collapse border-gray-300">
                 <thead>
                     <tr className="bg-gray-100">
                         <th className="border border-gray-300 p-1 text-center ">Product Name</th>

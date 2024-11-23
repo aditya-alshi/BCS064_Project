@@ -7,7 +7,7 @@ export default function Header() {
                 <ul className="flex justify-around mr-auto ml-5 border">
                     <li className="
                         underline hover:no-underline
-                    "><Link to={"/"}>Manage Products</Link></li>
+                    "><Link to={"/admin/main"}>Manage Products</Link></li>
                     <li className="
                         underline hover:no-underline
                     "><Link to={"/sellers"}>Manage Sellers</Link></li>

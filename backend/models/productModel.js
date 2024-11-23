@@ -13,17 +13,24 @@ const Products = {
             SELECT pi.image_url, pi.product_id, pd.product_name, pd.product_description 
             FROM products pd INNER JOIN product_images pi 
             ON pd.product_id = pi.product_id
-            WHERE pd.approval_status="pending"
+            WHERE pd.approval_status="approved"
         `
         connection.query(query, callback)
-    }
-    // (callback) => {
-    //     connection.query('SELECT * FROM products', callback)
-    // }
-    ,
-    // fetch one product
-    oneProduct : (productId, callback) => {
-        connection.query('SELECT product_name FROM products WHERE id=?',
+    },
+    oneProduct : (data, callback) => {
+        const query = `
+            SELECT pi.image_url as imageKey,
+            pd.product_name as product_name,
+            pd.product_description as product_description,
+            pd.category as category,
+            pd.price as price,
+            pd.category_type as category_type,
+            pd.seller_id as seller_id
+            FROM products pd INNER JOIN product_images pi ON pd.product_id=pi.product_id
+            WHERE pd.product_id=?;
+        `
+        const { productId } = data;
+        connection.query(query,
             [productId],
             callback
         )
@@ -33,19 +40,21 @@ const Products = {
     newProduct : (data, callback) => {
         const query = `
             INSERT INTO products (
-                product_id, product_name, product_description, category,  stock
+                product_id, product_name, product_description, category,  stock, seller_id, price, category_type
             ) VALUES (
-                ?, ?, ?, ?, ?
+                ?, ?, ?, ?, ?, ?, ?, ?
             )
         `
-        const { productId, productName, productDescription, category, stock } = data;
+        const { productId, productName, productDescription, category, stock, seller_id, price, categoryType } = data;
         connection.query(
             query, 
-            [ productId, productName, productDescription, category, stock ],
+            [ productId, productName, productDescription, category, stock, seller_id, price, categoryType ],
             callback
         )
     }
 }
+
+
 
 const ProductImage = {
     addNewImage: (data, callback) => {

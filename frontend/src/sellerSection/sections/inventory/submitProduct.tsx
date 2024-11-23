@@ -3,12 +3,12 @@ import { Form, useActionData } from "react-router-dom"
 export async function action ({ request }: { request: Request }){
     const formdata = await request.formData();
     const jwtToken = JSON.parse(localStorage.getItem("jwtToken") || "");
-    let formOBject: Record<string, FormDataEntryValue> = {};
-    Array.from(formdata.entries()).forEach(([key, value]) => {
-        formOBject[key] = value;
-    })
+    // let formOBject: Record<string, FormDataEntryValue> = {};
+    // Array.from(formdata.entries()).forEach(([key, value]) => {
+    //     formOBject[key] = value;
+    // })
 
-    const body = JSON.stringify({...formOBject})
+    // const body = JSON.stringify({...formOBject})
     const response = await fetch("http://localhost:5000/seller/addNewProduct",{
         method: "POST",
         headers: {
@@ -36,18 +36,6 @@ export default function SubmitProduct() {
            {/* { actionData ? actionData.parsedResponse.message || actionData.parsedResponse.error: "" } */}
             <Form method="post" encType='multipart/form-data'>
                 <p>
-                    <label htmlFor="productName">
-                        <span>Product Name: </span>
-                        <input required className="border" type="text" name="productName" id="productName" />    
-                    </label>
-                </p>
-                <p>
-                    <label htmlFor="productDescription">
-                        <span>Product Description: </span>
-                        <textarea required className="border" name="productDescription" id="productDescription" ></textarea>    
-                    </label>
-                </p>
-                <p>
                     <label htmlFor="productImage">
                         <span>Product Image: </span>
                         <input required className="border" type="file" name="productImage" id="productImage" />    
@@ -64,6 +52,7 @@ export default function SubmitProduct() {
                             <option value="ladoo">Ladoo</option>
                             <option value="burfi">Burfi</option>
                             <option value="pak">Pak</option>
+                            <option value="ghewar">Ghewar</option>
                         </optgroup>
                         
                         <optgroup label="Savories">
@@ -75,9 +64,38 @@ export default function SubmitProduct() {
                     </select>
                 </p>
                 <p>
+                    <label htmlFor="categoryType">
+                        <span>Product category: </span>
+                    </label>
+                    <select required name="categoryType" id="categoryType">
+                        <option value="">Choose Type</option>
+                        <option value="sweet">Sweet</option>
+                        <option value="sweet">Savory</option>
+                    
+                    </select>
+                </p>
+                <p>
+                    <label htmlFor="productName">
+                        <span>Product Name: </span>
+                        <input required className="border" type="text" name="productName" id="productName" />    
+                    </label>
+                </p>
+                <p>
+                    <label htmlFor="productDescription">
+                        <span>Product Description: </span>
+                        <textarea required className="border" name="productDescription" id="productDescription" ></textarea>    
+                    </label>
+                </p>
+                <p>
                     <label htmlFor="stock">
                         <span>Stock </span>
                         <input required className="border" type="number" name="stock" id="stock" />    
+                    </label>
+                </p>
+                <p>
+                    <label htmlFor="price">
+                        <span>Price</span>
+                        <input required className="border" type="number" name="price" id="price" />
                     </label>
                 </p>
                 <p className="mt-4">

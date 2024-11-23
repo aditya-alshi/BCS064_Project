@@ -13,7 +13,7 @@ export async function getAllProducts(pageNo: number) {
             method: "GET",
             // headers: headers
         });
-        const parsedresponse =  await response.json() 
+        const parsedresponse = await response.json()
         return parsedresponse
     } catch (error) {
         return {
@@ -26,17 +26,39 @@ export async function getAllProducts(pageNo: number) {
 //     return fetchProductsWithImages(pageNo)
 // }
 
-// export function getProductById(productId: string) {
-//     try {
-//         const response = f
-//         if(result instanceof Error) throw Error
-//         return result;
-//     } catch (error: unknown) {
-//         if(error instanceof Error) {
-//             return { error: error.message}
-//         }
-//         else return {
-//             error: "Unknow error occured"
-//         }
-//     }
-// }
+export async function getProductById(productId: string) {
+    try {
+        const response = await fetch(`http://localhost:5005/shh-xxx-hss/admin/products/details/${productId}`)
+        const parsedresponse = await response.json()
+        if (parsedresponse.error) throw new Error(parsedresponse.error);
+        return parsedresponse;
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            return error.message
+        }
+        else return error
+    }
+}
+
+export async function chageProductAprovalStatus({ productId, approvalStatus }: { productId: string, approvalStatus: string }) {
+
+    const body = JSON.stringify({ productId, approvalStatus })
+    try {
+        const response = await fetch('http://localhost:5005/shh-xxx-hss/admin/products/chageApprovalStatus/', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: body
+
+        })
+        const parsedresponse = await response.json();
+        if (parsedresponse.error) throw new Error("Something went wrong client-side-server-response-error");
+        return parsedresponse
+    } catch (error) {
+        if (error instanceof Error) {
+            return error.message
+        }
+        else return error
+    }
+}

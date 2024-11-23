@@ -7,7 +7,7 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const { v4: uuidv4 } = require('uuid');
 const { authenticateAdmin } = require('./lib/middleware');
-const { fetchAllProducts, deleteAProduct } = require('./controllers/productsController');
+const { fetchAllProducts, deleteAProduct, fetchProductById, changeApprovalStatus } = require('./controllers/productsController');
 app.use(cors())
 app.use(express.json())
 
@@ -15,7 +15,9 @@ app.post('/shh-xxx-hss/admin/login', validateAdminLogin)
 
 app.get('/shh-xxx-hss/admin/all-products/:pageNo', fetchAllProducts)
 
-// app.get('/shh-xxx-hss/admin/products/details/:product_id', fetchProductById)
+app.get('/shh-xxx-hss/admin/products/details/:product_id', fetchProductById);
+
+app.post('/shh-xxx-hss/admin/products/chageApprovalStatus', changeApprovalStatus)
 
 app.post('/shh-xxx-hss/admin/products/delete/:product_id', deleteAProduct)
 
