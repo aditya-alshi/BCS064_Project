@@ -3,7 +3,7 @@ import { Form, useActionData } from "react-router-dom";
 export async function action({ request }: { request: Request }) {
   const formdata = await request.formData();
   const jwtToken = JSON.parse(localStorage.getItem("jwtToken") || "");
-  const response = await fetch("http://localhost:5000/seller/addNewProduct", {
+  const response = await fetch("http://13.234.75.74:3000/seller/addNewProduct", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${jwtToken}`,

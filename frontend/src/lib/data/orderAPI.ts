@@ -5,7 +5,7 @@ export async function proceedToCheckOut(payload : { cart: CartItem[], totalAmoun
 
         const jwtCustomerToken = JSON.parse(localStorage.getItem('jwtCustomerToken') || "")
         const body = JSON.stringify(payload)
-        const response = await fetch(`http://localhost:5000/order/checkout`, {
+        const response = await fetch(`http://13.234.75.74:3000/order/checkout`, {
             method: 'POST',
             headers : {
                 'Content-Type' : "application/json",

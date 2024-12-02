@@ -1,7 +1,7 @@
 export async function getAllProductsBySeller() {
     const jwtToken = JSON.parse(localStorage.getItem("jwtToken") || "");
     try {
-        const response = await fetch('http://localhost:5000/seller/products', {
+        const response = await fetch('http://13.234.75.74:3000/seller/products', {
             headers: {
                 Authorization: `Bearer ${jwtToken}`,
               },

@@ -18,7 +18,7 @@ export async function action({ request }: { request: Request }) {
 
   const body = JSON.stringify(formEntires);
 
-  const response = await fetch("http://localhost:5000/seller/register", {
+  const response = await fetch("http://13.234.75.74:3000/seller/register", {
     method: "POST",
     headers: {
       "Content-Type": "application/json", // Ensure the server knows you're sending JSON
