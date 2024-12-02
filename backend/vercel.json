@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "builds": [{ "src": "./lib/server.js", "use": "@vercel/node" }],
   "rewrites": [
     { "source": "/(.*)", "destination": "./lib/server.js" }
   ]
