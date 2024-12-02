@@ -2,13 +2,16 @@ import { useState } from "react";
 import { availableSavories, availableSweets } from "../../../data/filterData";
 import Filter from "../Filters";
 import { Search } from "../Header/Search";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Header() {
   const [drop, setDrop] = useState({
     sweets: false,
     savories: false,
-    search: false
+    search: false,
   });
+
+  const navigate = useNavigate();
 
   const renderSweets = availableSweets.map((sweet, index) => (
     <li key={index} className="filters w-full mt-1 ">
@@ -58,9 +61,9 @@ export default function Header() {
       <section className="ml-4">
         <img src="main-logo.png" alt="" className="w-[11rem]" />
       </section>
-      { drop.search && <Search /> }
+      {drop.search && <Search />}
       <section className="text-xl min-w-[20rem]  flex justify-around items-center">
-        <span
+        {/* <span
           onClick={() =>
             setDrop((drop) => ({
               ...drop,
@@ -99,8 +102,14 @@ export default function Header() {
             <div className="mb-4 text-indigoDye">All Savories</div>
             <ul>{renderSavories}</ul>
           </section>
-        </span>
+        </span> */}
       </section>
+      <Link
+        to="/panel/seller/login"
+        className="px-4 py-2 bg-orangeee text-white font-medium rounded-lg shadow-md hover:bg-lighterAccent transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+      >
+        Login as a Seller
+      </Link>
       <section className="flex gap-[1rem] items-center justify-end mr-[5rem]">
         <svg
           className="w-[1.7rem] inline-block text-yellowish"
@@ -113,6 +122,7 @@ export default function Header() {
           />
         </svg>
         <svg
+          onClick={() => navigate("/cart")}
           className="w-[1.7rem] text-yellowish"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 576 512"

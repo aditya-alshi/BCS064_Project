@@ -1,36 +1,78 @@
-import { orderList } from "./lib/data"
-import { Link } from "react-router-dom"
+import { Link, useLoaderData } from "react-router-dom";
+import { getOrdersBySellerId } from "./lib/data/sellerOrderAPI";
+import { OrderItems } from "./lib/types/orderTypes";
+
+export async function loader() {
+  const response = await getOrdersBySellerId();
+
+  return response;
+}
 
 export default function Orders() {
+  const loaderData = useLoaderData() as
+    | {
+        orderItemsBySellerIdResult: OrderItems[];
+      }
+    | string;
 
-    const renderOrderList = orderList.map((order, index) => (
-        <tr key={index}>
-            <td className="border border-gray-300 p-1 ">{index + 1}</td>
-            <td className="border border-gray-300 p-1 underline hover:no-underline cursor-pointer truncate" >{order.order_id}</td>
-            <td className="border border-gray-300 p-1 underline hover:no-underline cursor-pointer"><Link to={`${order.order_id}`}>{order.productName}</Link></td>
-            <td className="border border-gray-300 p-1 ">{order.status}</td>
-            <td className="border border-gray-300 p-1 ">{order.order_date.toLocaleDateString()}</td>
-            <td className="border border-gray-300 p-1 ">₹{order.total_price}</td>
-        </tr>
-    ))
+  if (typeof loaderData === "string") return <p>{loaderData}</p>;
 
-    return (
-        <section className="w-[86%] m-auto">
-            <table className="w-full border-collapse border border-gray-300">
-                <thead>
-                    <tr className="bg-gray-100">
-                        <th className="border border-gray-300 p-1 text-center">Sr.</th>
-                        <th className="border border-gray-300 p-1 text-center">Order Id</th>
-                        <th className="border border-gray-300 p-1 text-center">Product Name</th>
-                        <th className="border border-gray-300 p-1 text-center">Order status</th>
-                        <th className="border border-gray-300 p-1 text-center">Order date</th>
-                        <th className="border border-gray-300 p-1 text-center">Order price</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    { renderOrderList }
-                </tbody>
-            </table>
-        </section>
-    )
+  const orderList = loaderData.orderItemsBySellerIdResult;
+
+  const renderOrderList = orderList.map((order, index) => (
+    <tr
+      key={index}
+      className="hover:bg-yellow-50 transition-colors duration-200"
+    >
+      <td className="border border-gray-300 p-3 text-center">{index + 1}</td>
+      <td className="border border-gray-300 p-3 text-center truncate">
+        <span className="text-blue-600 underline hover:no-underline cursor-pointer">
+          {order.order_id}
+        </span>
+      </td>
+      <td className="border border-gray-300 p-3 text-center">
+        <Link
+          to={`${order.order_id}`}
+          className="text-blue-600 underline hover:no-underline"
+        >
+          {order.product_name}
+        </Link>
+      </td>
+      <td
+        className={`border border-gray-300 p-3 text-center ${
+          order.delivery_status === "Delivered"
+            ? "text-green-600 font-semibold"
+            : "text-red-600 font-semibold"
+        }`}
+      >
+        {order.delivery_status}
+      </td>
+      <td className="border border-gray-300 p-3 text-center">
+        ₹{order.total_price}
+      </td>
+    </tr>
+  ));
+
+  return (
+    <section className="w-[86%] mx-auto py-8">
+      <table className="w-full border-collapse border border-gray-300 shadow-lg">
+        <thead>
+          <tr className="bg-accent text-white">
+            <th className="border border-gray-300 p-3 text-center">Sr.</th>
+            <th className="border border-gray-300 p-3 text-center">Order ID</th>
+            <th className="border border-gray-300 p-3 text-center">
+              Product Name
+            </th>
+            <th className="border border-gray-300 p-3 text-center">
+              Order Status
+            </th>
+            <th className="border border-gray-300 p-3 text-center">
+              Order Price
+            </th>
+          </tr>
+        </thead>
+        <tbody>{renderOrderList}</tbody>
+      </table>
+    </section>
+  );
 }

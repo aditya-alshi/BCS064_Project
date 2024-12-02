@@ -1,14 +1,14 @@
 import { Inventory } from "../types/sellerTypes"
-import { inventoryProducts } from "../data"
+
 import { useLoaderData } from "react-router-dom"
 
 export async function loader({params} : {params: {productId?: string}}) {
-    const product = await (async () => {
-        const targetProduct = inventoryProducts.find(product => product.product_id === params.productId )
-        return targetProduct ? targetProduct : "Not found"
-    })()
+    // const product = await (async () => {
+    //     const targetProduct = inventoryProducts.find(product => product.product_id === params.productId )
+    //     return targetProduct ? targetProduct : "Not found"
+    // })()
 
-    return product ;
+    return "product" ;
 }
 
 export default function ProductDetails() {

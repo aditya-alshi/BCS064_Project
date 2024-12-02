@@ -6,7 +6,9 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const { v4: uuidv4 } = require("uuid");
 const { Seller, SellerStoreAddress } = require("../models/sellerModel");
-const JWT_PRIVATE_KEY = process.env.JWT_SECRET_PRIVATE_KEY
+const { Customer, CustomerAddress } = require("../models/customerModel");
+const JWT_PRIVATE_KEY = process.env.JWT_SECRET_PRIVATE_KEY;
+const JWT_CUSTOMER_PRIVATE_KEY = process.env.JWT_SECRET_CUSTOMER_PRIVATE_KEY;
 
 // CONTROLLERS
 async function validateUserLogin(req, res) {
@@ -71,6 +73,71 @@ async function validateUserLogin(req, res) {
   }
 }
 
+async function validateCustomerLogin(req, res) {
+  const { email, password } = req.body;
+  
+  console.log("Custoemr", {email, password})
+
+  try {
+    const results = await validateEmailHelper(email);
+
+    console.log("validata cus email", results)
+    if (results.message) {
+      return res.status(401).json({
+        error: results.message,
+      });
+    }
+    if (results.length === 0) {
+      return res.status(401).json({
+        error: "No account found for this email",
+      });
+    }
+    
+    const userId = results[0].user_id;
+    
+    const paswordHelperResult = await validateCustomerPasswordHelper({userId});
+    console.log("Validate cus password", paswordHelperResult)
+    if (paswordHelperResult.length === 0) {
+      return res.status(401).json({
+        error: "Invalid ",
+      });
+    }
+
+    const [{ hashedPassword, customer_id }] = paswordHelperResult
+
+
+    const isValidPassword = await bcrypt.compare(
+      password,
+      hashedPassword
+    );
+    if (isValidPassword) {
+      
+      const jwtCustomerToken = jwt.sign({
+        customer_id
+      },
+      JWT_CUSTOMER_PRIVATE_KEY,
+      { expiresIn: '1h'}
+    )
+
+
+      return res.status(200).json({
+        message: "Customer Login succesfull",
+        jwtCustomerToken
+      });
+
+    } else {
+      return res.status(401).json({
+        error: "Invalid Password",
+      });
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
 async function registerSeller(req, res) {
   const {
     email,
@@ -96,7 +163,7 @@ async function registerSeller(req, res) {
     role: "seller",
   };
   try {
-    const results = await registerSellerHelper(modifyData);
+    const results = await registerUserHelper(modifyData);
 
     if (results && results.affectedRows === 1) {
       const sellerId = uuidv4();
@@ -161,6 +228,94 @@ async function registerSeller(req, res) {
   }
 }
 
+async function registerCustomer(req, res) {
+  const {
+    email,
+    password,
+    customerName,
+    phoneNumber,
+    addressLine1,
+    addressLine2,
+    city,
+    country,
+    zipCode,
+  } = req.body;
+  
+
+  const userId = uuidv4();
+
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+  const modifyData = {
+    userId,
+    email,
+    password: hashedPassword,
+    role: "customer",
+  };
+  try {
+    const results = await registerUserHelper(modifyData);
+    console.log(results)
+
+    if (results && results.affectedRows === 1) {
+      const customerId = uuidv4();
+      const modifyCustomerInformation = {
+        customerId, registerUserId: userId, customerName, phoneNumber
+      };
+
+      const customerEntryResult = await customerEntryHelper(
+        modifyCustomerInformation
+      );
+
+      if (customerEntryResult && customerEntryResult.affectedRows === 1) {
+        const customerAddressId = uuidv4();
+
+        const modifyCustomerAddressInfo = {
+          customerAddressId,
+          customerId,
+          addressLine1,
+          addressLine2,
+          city,
+          country,
+          zipCode,
+        };
+
+        const customerAddressEntryResult =
+          await customerAddressInfoHelper(modifyCustomerAddressInfo);
+
+        if (
+          customerAddressEntryResult &&
+          customerAddressEntryResult.affectedRows === 1
+        ) {
+          return res.status(201).json({
+            message: "Customer Registered Successfully",
+          });
+        } else {
+          return res.status(400).json({
+            error: "Registration failed",
+          });
+        }
+      } else {
+        return res.status(400).json({
+          error: "Registration failed",
+        });
+      }
+    } else {
+      return res.status(400).json({
+        error: "Registration failed",
+      });
+    }
+  } catch (error) {
+    if (error.code === "DUPLICATE_ENTRY") {
+      return res.status(409).json({
+        error: error.message,
+      });
+    }
+    return res.status(500).json({
+      error: "An internal server error occured",
+    });
+  }
+}
+
 // HELPER FUNCTIONS
 function validateEmailHelper(email) {
   return new Promise((resolve, reject) => {
@@ -187,7 +342,7 @@ function validatePasswordHelper(userId) {
   });
 }
 
-function registerSellerHelper(modifyData) {
+function registerUserHelper(modifyData) {
   return new Promise((resolve, reject) => {
     User.UserRegister(modifyData, (error, results) => {
       if (error) {
@@ -208,6 +363,8 @@ function registerSellerHelper(modifyData) {
   });
 }
 
+
+// Seller
 function sellerEntryHelper(modifySellerInformation) {
   return new Promise((resolve, reject) => {
     Seller.addSeller(modifySellerInformation, (error, results) => {
@@ -236,9 +393,53 @@ function sellerStoreAddressInfoHelper(modifySellerStoreAddressInfo) {
   });
 }
 
+
+//Custoer 
+function customerEntryHelper(modifyCustomerInformation) {
+  return new Promise((resolve, reject) => {
+    Customer.addCustomer(modifyCustomerInformation, (error, results) => {
+      if (error)
+        reject({
+          error: error.message,
+        });
+      resolve(results);
+    });
+  });
+}
+
+function validateCustomerPasswordHelper(data) {
+  return new Promise((resolve, reject) => {
+    Customer.CustomerLoginPassword(data, (error, results) => {
+      if (error)
+        reject({
+          message: error.message,
+        });
+      resolve(results);
+    });
+  });
+}
+
+function customerAddressInfoHelper(modifySellerStoreAddressInfo) {
+  return new Promise((resolve, reject) => {
+    CustomerAddress.addCustomerAddress(
+      modifySellerStoreAddressInfo,
+      (error, results) => {
+        if (error) {
+          reject({
+            error: error.message,
+          });
+        }
+        resolve(results);
+      }
+    );
+  });
+}
+
 module.exports = {
   validateUserLogin,
+  validateCustomerLogin,
   registerSeller,
+  registerCustomer
 };
 
 

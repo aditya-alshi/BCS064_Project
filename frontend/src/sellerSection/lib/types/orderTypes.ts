@@ -1,13 +1,12 @@
-export type Orders = {
-    order_id : string;
-    seller_id : string;
-    customerId : string;
-    productName : string;
-    order_date: Date;
-    order_address: string;
-    payment_mode: "COD" | "debit_card" | "credit_card" | "upi";
-    status: "pending" | "shipped" | "delivered";
-    estimate_delivery: Date;
-    actual_delivery: Date;
+export type OrderItems = {
+    order_item_id: string;  
+    order_id: string;       
+    product_id: string;     
+    seller_id: string;      
+    quantity: number;      
+    item_price: number;   
     total_price: number;
+    delivery_status:'Pending' | 'Shipped' | 'Delivered' | 'Canceled';
+    delivery_date: Date;
+    product_name: string;
 }

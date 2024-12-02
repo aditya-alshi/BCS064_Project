@@ -4,9 +4,9 @@ import './index.css';
 import App from './App';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ManageProducts, { loader as ManageProductLoader } from './sections/main/products/ManageProducts';
-// import ManageSellers from './sections/main/sellers/ManageSellers';
-// import ManageCustomers from './sections/main/customers/ManageCustomers';
-// import ManageOrders from './sections/main/orders/ManageOrders';
+import ManageSellers, { loader as ManageSellersLoader} from './sections/main/sellers/ManageSellers';
+import ManageCustomers, { loader as ManageCustomerLoader } from './sections/main/customers/ManageCustomers';
+import ManageOrders, { loader as ManageOrdersLoader } from  './sections/main/orders/ManageOrders';
 import ProductDetails, { loader as ProductDetailsLoader, action as ProductDetailsAction } from './sections/main/products/ProductDetails';
 
 import Login, { action as adminLoginAction } from './sections/login/Login';
@@ -33,18 +33,21 @@ const router = createBrowserRouter([
       //   action: jokerAction,
       //   element: <JokerComponent />
       // },
-      // {
-      //   path: 'sellers',
-      //   element: <ManageSellers />
-      // },
-      // {
-      //   path: 'customers',
-      //   element: <ManageCustomers />
-      // },
-      // {
-      //   path: "orders",
-      //   element: <ManageOrders />
-      // },
+      {
+        path: 'sellers',
+        loader: ManageSellersLoader,
+        element: <ManageSellers />
+      },
+      {
+        path: 'customers',
+        loader: ManageCustomerLoader,
+        element: <ManageCustomers />
+      },
+      {
+        path: "orders",
+        loader: ManageOrdersLoader,
+        element: <ManageOrders />
+      },
       {
         path: 'product/:product_id',
         loader: ProductDetailsLoader,

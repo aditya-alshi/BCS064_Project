@@ -1,15 +1,15 @@
-const { connection } = require('../lib/db')
+const { connection } = require("../lib/db");
 
 const ADMIN = {
-    adminEmailLogin : (data, callback) => {
-        const query = `
+  adminEmailLogin: (data, callback) => {
+    const query = `
             SELECT * FROM user WHERE email=?
-        `
-        const { email } = data;
-        connection.query(query, [email], callback)
-    }
-}
+        `;
+    const { email } = data;
+    connection.query(query, [email], callback);
+  },
+};
 
 module.exports = {
-    ADMIN
-}
+  ADMIN,
+};

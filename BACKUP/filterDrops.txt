@@ -1,0 +1,42 @@
+<section className="text-xl min-w-[20rem]  flex justify-around items-center">
+        {/* <span
+          onClick={() =>
+            setDrop((drop) => ({
+              ...drop,
+              savories: false,
+              sweets: !drop.sweets,
+            }))
+          }
+          className="underline cursor-pointer hover:no-underline relative"
+        >
+          Sweets
+          <section
+            className={` bg-white p-3 border rounded-sm min-w-[15rem] absolute left-[-1rem] ${
+              !drop.sweets ? "hidden" : ""
+            }`}
+          >
+            <div className="mb-4 text-indigoDye">All Sweets</div>
+            <ul>{renderSweets}</ul>
+          </section>
+        </span>
+        <span
+          onClick={() =>
+            setDrop((drop) => ({
+              ...drop,
+              sweets: false,
+              savories: !drop.savories,
+            }))
+          }
+          className="underline cursor-pointer hover:no-underline relative"
+        >
+          Savories
+          <section
+            className={`bg-white p-3 border rounded-sm min-w-[15rem] absolute left-[-1rem] ${
+              !drop.savories ? "hidden" : ""
+            }`}
+          >
+            <div className="mb-4 text-indigoDye">All Savories</div>
+            <ul>{renderSavories}</ul>
+          </section>
+        </span> */}
+      </section>

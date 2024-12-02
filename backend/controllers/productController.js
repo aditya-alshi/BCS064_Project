@@ -5,34 +5,52 @@ const { getSignedDownloadUrl, s3Uploader } = require("../signer/signer");
 const { v4: uuidv4 } = require("uuid");
 
 async function getAllProducts(req, res) {
+  const pageNo = req.params.pageNo;
   try {
-    const result = await allProduct(); // this will contain the image information including image path
+    const result = await allProduct({pageNo}); // this will contain the image information including image path
+    
+    if(!result) {
+      return res.status(404).json({
+        error: "No product find"
+      })
+    }
     const imagePromises = result.map(async (product) => ({
       ...product,
       image_url: await getSignedDownloadUrl(product.image_url), // this will grab the image path and make it
       // a presigned url
     }));
     const withSignedImages = await Promise.all(imagePromises);
+    const totalRowsResult = await totalRowsCount();
+    if (!Array.isArray(totalRowsResult) || totalRowsResult.length === 0) {
+      return res.status(404).json({
+        error: "No Products found",
+      });
+    }
 
-    return res.status(200).json(withSignedImages);
+    const [{ totalRows }] = totalRowsResult;
+
+    return res.status(200).json({
+      totalPages: Math.ceil(totalRows / 10),
+      pageNo,
+      withSignedImages
+    });
   } catch (error) {
     res.status(500).json({
-      error: error.message,
+      error: "Something went wrong",
     });
   }
 }
 
 async function getProductById(req, res) {
-  const productId = req.params.productId;
-  console.log(productId);
+  const incomingProductId = req.params.productId;
   try {
     // fetch Product details from the products table
-    const productByIdResults = await productByIdHelper({ productId });
+    const productByIdResults = await productByIdHelper({ incomingProductId });
     if (Array.isArray(productByIdResults) && productByIdResults.length > 0) {
       // fetch seller details from the seller table join seller_store_address table
-      console.log([{ ...productByIdResults }]);
       const [
         {
+          product_id: productId,
           seller_id: sellerId,
           product_name: productName,
           product_description: productDescription,
@@ -43,11 +61,12 @@ async function getProductById(req, res) {
         },
       ] = productByIdResults;
       const signerUrl = await getSignedDownloadUrl(imageKey)
-      console.log("Seller id is : ", sellerId);
       const sellerByIdResults = await sellerByIdHelper({ sellerId });
       if (Array.isArray(sellerByIdResults) && sellerByIdResults.length > 0) {
         const [{ businessName, city, country }] = sellerByIdResults;
         const completeProductDetails = {
+          productId,
+          sellerId,
           productName,
           productDescription,
           category,
@@ -58,6 +77,7 @@ async function getProductById(req, res) {
           country,
           signerUrl
         };
+        
 
         return res.status(200).json({
             completeProductDetails
@@ -141,11 +161,25 @@ async function addNewProduct(req, res) {
 }
 
 // HELPER FUNCTIONS
-function allProduct() {
+
+function totalRowsCount() {
+  return new Promise((resolve, reject) => {
+    Products.totalCount((error, results) => {
+      if (error) {
+        return reject({
+          error: error,
+        });
+      }
+      return resolve(results);
+    });
+  });
+}
+
+function allProduct(data) {
   // Something new here. We have chosed to return a Promise itself which will be resolved. or rejected
   // The allProduct() will run the query and return the result here.
   return new Promise((resolve, reject) => {
-    Products.allProducts((error, results) => {
+    Products.allProducts(data,(error, results) => {
       if (error) return reject(error);
       resolve(results);
     });

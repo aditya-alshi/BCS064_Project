@@ -40,115 +40,148 @@ export default function Register() {
   };
 
   return (
-    <section className="w-full flex flex-col justify-center items-center ">
-      <p>{(actionData && actionData.parsedResponse.message) || "Register"}</p>
-      {actionData && actionData.statusCode === 201 ? (
+    <section className="w-full min-h-screen flex flex-col justify-center items-center bg-background py-8 px-4">
+      {/* Title or Success Message */}
+      <p className="text-accent text-2xl font-bold mb-4">
+        {(actionData && actionData.parsedResponse.message) || "Register"}
+      </p>
+
+      {/* Link to Login Page */}
+      {actionData && actionData.statusCode === 201 && (
         <Link
-          className="text-lighterAccent underline hover:no-underline"
+          className="text-lighterAccent font-medium underline hover:no-underline mb-6"
           to={"/panel/seller/login"}
         >
           Go to login page
         </Link>
-      ) : (
-        ""
       )}
+
+      {/* Registration Form */}
       <Form
-        className="max-w-[40rem] flex flex-col justify-center items-center"
+        className="max-w-[40rem] w-full bg-white p-6 rounded-lg shadow-lg flex flex-col gap-6"
         method="post"
       >
-        <label className="block" htmlFor="email">
-          <span>Email</span>
+        {/* Email */}
+        <label className="block text-accent font-medium">
+          Email
           <input
-            className="border"
+            className="w-full border border-gray-300 rounded-md p-2 mt-1 focus:ring-2 focus:ring-accent outline-none"
             required
             type="email"
             id="email"
             name="email"
+            placeholder="Enter your email"
           />
         </label>
-        <label className="block" htmlFor="password">
-          <span>Password</span>
+
+        {/* Password */}
+        <label className="block text-accent font-medium">
+          Password
           <input
-            className="border"
+            className="w-full border border-gray-300 rounded-md p-2 mt-1 focus:ring-2 focus:ring-accent outline-none"
             required
             type="password"
             id="password"
             name="password"
+            placeholder="Enter your password"
           />
         </label>
-        <label htmlFor="bussinessName">
-          <span>Business name</span>
+
+        {/* Business Name */}
+        <label className="block text-accent font-medium">
+          Business Name
           <input
-            className="border"
+            className="w-full border border-gray-300 rounded-md p-2 mt-1 focus:ring-2 focus:ring-accent outline-none"
             required
             type="text"
             id="bussinessName"
             name="bussinessName"
+            placeholder="Enter your business name"
           />
         </label>
-        <label htmlFor="phoneNumber">
-          <span>Contact no: </span>
+
+        {/* Phone Number */}
+        <label className="block text-accent font-medium">
+          Contact No.
           <input
-            className="border"
+            className="w-full border border-gray-300 rounded-md p-2 mt-1 focus:ring-2 focus:ring-accent outline-none"
             required
             type="tel"
             id="phoneNumber"
             name="phoneNumber"
+            placeholder="Enter your contact number"
           />
         </label>
-        <label htmlFor="addressLine1">
-          <span>Address Line 1 </span>
+
+        {/* Address Line 1 */}
+        <label className="block text-accent font-medium">
+          Address Line 1
           <input
-            className="border"
+            className="w-full border border-gray-300 rounded-md p-2 mt-1 focus:ring-2 focus:ring-accent outline-none"
             required
             type="text"
             id="addressLine1"
             name="addressLine1"
+            placeholder="Enter address line 1"
           />
         </label>
-        <label htmlFor="addressLine2">
-          <span>Address Line 2 </span>
+
+        {/* Address Line 2 */}
+        <label className="block text-accent font-medium">
+          Address Line 2
           <input
-            className="border"
+            className="w-full border border-gray-300 rounded-md p-2 mt-1 focus:ring-2 focus:ring-accent outline-none"
             required
             type="text"
             id="addressLine2"
             name="addressLine2"
+            placeholder="Enter address line 2"
           />
         </label>
-        <label htmlFor="city">
-          <span>City </span>
+
+        {/* City */}
+        <label className="block text-accent font-medium">
+          City
           <input
-            className="border"
+            className="w-full border border-gray-300 rounded-md p-2 mt-1 focus:ring-2 focus:ring-accent outline-none"
             required
             type="text"
             id="city"
             name="city"
+            placeholder="Enter your city"
           />
         </label>
-        <label htmlFor="country">
-          <span>Country </span>
+
+        {/* Country */}
+        <label className="block text-accent font-medium">
+          Country
           <input
-            className="border"
+            className="w-full border border-gray-300 rounded-md p-2 mt-1 focus:ring-2 focus:ring-accent outline-none"
             required
             type="text"
             id="country"
             name="country"
+            placeholder="Enter your country"
           />
         </label>
-        <label htmlFor="zipCode">
-          <span>Zip Code </span>
+
+        {/* Zip Code */}
+        <label className="block text-accent font-medium">
+          Zip Code
           <input
-            className="border"
+            className="w-full border border-gray-300 rounded-md p-2 mt-1 focus:ring-2 focus:ring-accent outline-none"
             required
             type="text"
             id="zipCode"
             name="zipCode"
+            placeholder="Enter your zip code"
           />
         </label>
+
+        {/* Submit Button */}
         <p className="mt-4 w-full">
           <button
-            className=" active:outline-2 hover:scale-x-[1.025] py-1 w-full bg-lighterAccent text-white "
+            className="w-full py-2 bg-accent text-white font-medium rounded-md hover:bg-lighterAccent transition-transform transform hover:scale-105 focus:ring-2 focus:ring-lighterAccent focus:ring-offset-2 focus:outline-none"
             type="submit"
           >
             Register

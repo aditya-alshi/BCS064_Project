@@ -1,12 +1,10 @@
 import { approval_status } from "./otherTypes";
 
 export type Seller = {
-    sellerId: string;
-    userId: string;
-    businessName: string;
-    email: string;
-    password: string;
-    storeAddress: string;
-    phoneNumber: string;
+    seller_id: string;
+    registered_user_id:  string; 
+    bussiness_name: string;
+    phone_number:string;
     approval_status: approval_status;
+    
 }

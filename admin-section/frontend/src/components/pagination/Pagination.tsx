@@ -1,14 +1,15 @@
 import { useNavigate } from "react-router-dom";
 
 
-export default function Pagination({totalPages, pageNo}: {
+export default function Pagination({totalPages, pageNo, routeName}: {
   totalPages: number,
-  pageNo: number
+  pageNo: number,
+  routeName: string
 }) {
   
   const navigate = useNavigate();
   const handlePageChange = (newPageNo: number) => {
-    navigate(`/admin/main?pageNo=${newPageNo}`)
+    navigate(`/admin/main${routeName || ""}?pageNo=${newPageNo}`)
   }
 
   const renderPages = [...Array(totalPages)].map((_, index) => (

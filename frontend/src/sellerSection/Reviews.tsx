@@ -1,17 +1,17 @@
-import { reviewList } from "./lib/data"
+
 
 export default function Reviews() {
 
-    const renderReviewList = reviewList.map((review, index) => (
-        <tr>
-            <td className=" truncate border border-gray-300 p-1 text-center" >{review.review_id}</td>
-            <td className=" truncate border border-gray-300 p-1 text-center">{review.product_id}</td>
-            <td className=" truncate border border-gray-300 p-1 text-center">{review.customer_id}</td>
-            <td className="border border-gray-300 p-1 text-center">{review.rating}</td>
-            <td className="border border-gray-300 p-1 text-center">{review.comment}</td>
-            <td className="border border-gray-300 p-1 text-center">{review.created_at.toLocaleString()}</td>
-        </tr>
-    ))
+    // const renderReviewList = reviewList.map((review, index) => (
+    //     <tr>
+    //         <td className=" truncate border border-gray-300 p-1 text-center" >{review.review_id}</td>
+    //         <td className=" truncate border border-gray-300 p-1 text-center">{review.product_id}</td>
+    //         <td className=" truncate border border-gray-300 p-1 text-center">{review.customer_id}</td>
+    //         <td className="border border-gray-300 p-1 text-center">{review.rating}</td>
+    //         <td className="border border-gray-300 p-1 text-center">{review.comment}</td>
+    //         <td className="border border-gray-300 p-1 text-center">{review.created_at.toLocaleString()}</td>
+    //     </tr>
+    // ))
 
     return (
         <section className="w-[86%] m-auto">
@@ -27,7 +27,7 @@ export default function Reviews() {
                     </tr>
                 </thead>
                 <tbody>
-                     {renderReviewList}
+                     {/* {renderReviewList} */}
                 </tbody>
             </table>
         </section>

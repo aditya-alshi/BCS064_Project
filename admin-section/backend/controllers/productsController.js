@@ -42,27 +42,29 @@ async function fetchProductById(req, res) {
 
   try {
     const productDetailsResult = await productDetailHelper({ productId });
-    
+
     if (
-      !(Array.isArray(productDetailsResult)) ||
+      !Array.isArray(productDetailsResult) ||
       productDetailsResult.length === 0
     ) {
       return res.status(404).json({
         error: "Prouduct Not found for this id",
       });
     }
-    const productImageHelperResult = await imageKeyHelper({ productId }) ;
-    
-    if (!Array.isArray(productImageHelperResult) || productImageHelperResult.length === 0) {
+    const productImageHelperResult = await imageKeyHelper({ productId });
+
+    if (
+      !Array.isArray(productImageHelperResult) ||
+      productImageHelperResult.length === 0
+    ) {
       return res.status(404).json({
         error: "Data not found (IMG)",
       });
     }
 
-    const [{ imageKey }] = productImageHelperResult ;
+    const [{ imageKey }] = productImageHelperResult;
 
-    const imageSignedUrl = await getSignedDownloadUrl(imageKey) || "";
-    
+    const imageSignedUrl = (await getSignedDownloadUrl(imageKey)) || "";
 
     const [
       {
@@ -76,7 +78,7 @@ async function fetchProductById(req, res) {
         created_at,
         updated_at,
         price,
-        category_type
+        category_type,
       },
     ] = productDetailsResult;
 
@@ -92,11 +94,11 @@ async function fetchProductById(req, res) {
       created_at,
       updated_at,
       price,
-      category_type
+      category_type,
     });
   } catch (error) {
     return res.status(500).json({
-      error: "Something went wrong. Try again later"
+      error: "Something went wrong. Try again later",
     });
   }
 }
@@ -144,17 +146,22 @@ async function deleteAProduct(req, res) {
 }
 
 async function changeApprovalStatus(req, res) {
-  const { approvalStatus, productId } = req.body
-  if(!approvalStatus || !productId) {
+  const { approvalStatus, productId } = req.body;
+  if (!approvalStatus || !productId) {
     return res.status(400).json({
-      error: "Invalid inputs"
-    })
+      error: "Invalid inputs",
+    });
   }
 
   try {
-
-    const approvalStatusAddedResult = await approvalStatusAddedHelper({ approvalStatus, productId })
-    if (approvalStatusAddedResult && approvalStatusAddedResult.affectedRows === 1) {
+    const approvalStatusAddedResult = await approvalStatusAddedHelper({
+      approvalStatus,
+      productId,
+    });
+    if (
+      approvalStatusAddedResult &&
+      approvalStatusAddedResult.affectedRows === 1
+    ) {
       return res.status(200).json({
         message: `Approval Status for product with product_id ${productId} has been changeed to ${approvalStatus} successfully`,
       });
@@ -163,11 +170,10 @@ async function changeApprovalStatus(req, res) {
         error: "Something went wrong PApStRes",
       });
     }
-
-  } catch( error) {
+  } catch (error) {
     return res.status(500).json({
-      error: "Something went wrong. Try again later"
-    })
+      error: "Something went wrong. Try again later",
+    });
   }
 }
 
@@ -238,17 +244,18 @@ function prouductDeleteHelper(data) {
 function approvalStatusAddedHelper(data) {
   return new Promise((resolve, reject) => {
     Product.changeApprovalStatus(data, (error, results) => {
-      if(error) return reject({
-        error
-      });
-      return resolve(results)
-    })
-  })
+      if (error)
+        return reject({
+          error,
+        });
+      return resolve(results);
+    });
+  });
 }
 
 module.exports = {
   fetchAllProducts,
   fetchProductById,
   deleteAProduct,
-  changeApprovalStatus
+  changeApprovalStatus,
 };

@@ -1,65 +1,91 @@
-import { inventoryProducts } from "./lib/data";
-import { Link, Form } from "react-router-dom";
+import { Link, Form, useLoaderData } from "react-router-dom";
+import { getAllProductsBySeller } from "./lib/data/productAPI";
+import { sellerProducts } from "./lib/types/sellerProductTypes";
 
-export async function action() {
-  const jwtToken = JSON.parse(localStorage.getItem("jwtToken") || "");
-  const response = await fetch("http://localhost:5000/joker/token", {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${jwtToken}`,
-    },
-  });
-  const parsedResponse = await response.json();
-  console.log(parsedResponse);
-  return parsedResponse;
+export async function loader() {
+  const response = await getAllProductsBySeller();
+
+  return response;
 }
 
 export default function ProductListing() {
+  const loaderData = useLoaderData() as
+    | {
+        allProductByIdResults: sellerProducts[];
+      }
+    | string;
+
+  if (typeof loaderData === "string")
+    return (
+      <h1 className="text-center text-red-500 font-bold text-lg">
+        {" "}
+        <Link
+          to={"submitproudct"}
+          className="inline-block px-6 py-2 bg-accent text-white font-medium rounded-md shadow-md hover:shadow-lg hover:bg-lighterAccent transition-transform transform hover:scale-105 mb-5"
+        >
+          Add New Product
+        </Link>
+      </h1>
+    );
+
+  const inventoryProducts = loaderData.allProductByIdResults;
+
   const renderProductListing = inventoryProducts.map((product, index) => (
-    <tr key={index}>
-      <td className="border border-gray-300 p-1 text-center">{index + 1}</td>
-      <td className="border border-gray-300 p-1 text-center underline hover:no-underline">
-        <Link to={`product/${product.product_id}`}>{product.productName}</Link>
+    <tr
+      key={index}
+      className="hover:bg-yellow-100 transition-colors duration-200"
+    >
+      <td className="border border-gray-300 p-3 text-center">{index + 1}</td>
+      <td className="border border-gray-300 p-3 text-center">
+        <Link
+          to={`product/${product.product_id}`}
+          className="text-blue-600 underline hover:no-underline hover:text-blue-800 transition-colors"
+        >
+          {product.product_name}
+        </Link>
       </td>
-      <td className="border border-gray-300 p-1 text-center">
-        {product.approvalStatus}
+      <td
+        className={`border border-gray-300 p-3 text-center ${
+          product.approval_status === "approved"
+            ? "text-green-600 font-semibold"
+            : "text-red-600 font-semibold"
+        }`}
+      >
+        {product.approval_status}
       </td>
-      <td className="border border-gray-300 p-1 text-center">
-        {product.category.type}
+      <td className="border border-gray-300 p-3 text-center">
+        {product.category}
       </td>
-      <td className="border border-gray-300 p-1 text-center">
-        {product.price}
+      <td className="border border-gray-300 p-3 text-center">
+        ₹{product.price}
       </td>
     </tr>
   ));
 
   return (
-    <section className="w-[86%] m-auto">
-      <Link className=" w-fit block p-2 border border-accent shadow hover:shadow-none" to={"submitproudct"}>
-        Add new Product
+    <section className="w-[86%] mx-auto py-8">
+      {/* Add New Product Button */}
+      <Link
+        to={"submitproudct"}
+        className="inline-block px-6 py-2 bg-accent text-white font-medium rounded-md shadow-md hover:shadow-lg hover:bg-lighterAccent transition-transform transform hover:scale-105 mb-5"
+      >
+        Add New Product
       </Link>
-      <table className="mt-5 w-full border-collapse border border-gray-300">
+
+      {/* Product Table */}
+      <table className="w-full border-collapse border border-gray-300 shadow-md">
         <thead>
-          <tr className="bg-gray-100">
-            <th className="border border-gray-300 p-1 text-center">Sr.</th>
-            <th className="border border-gray-300 p-1 text-center">Title</th>
-            <th className="border border-gray-300 p-1 text-center">
-              Approval status
+          <tr className="bg-accent text-white">
+            <th className="border border-gray-300 p-3 text-center">Sr.</th>
+            <th className="border border-gray-300 p-3 text-center">Title</th>
+            <th className="border border-gray-300 p-3 text-center">
+              Approval Status
             </th>
-            <th className="border border-gray-300 p-1 text-center">Category</th>
-            <th className="border border-gray-300 p-1 text-center">Price</th>
+            <th className="border border-gray-300 p-3 text-center">Category</th>
+            <th className="border border-gray-300 p-3 text-center">Price</th>
           </tr>
         </thead>
-        <tbody>
-          {/* <tr>
-                <td className="border border-gray-300 p-1 text-center">1</td>
-                <td className="border border-gray-300 p-1 text-center">Sample Title</td>
-                <td className="border border-gray-300 p-1 text-center">Approved</td>
-                <td className="border border-gray-300 p-1 text-center">Category A</td>
-                <td className="border border-gray-300 p-1 text-center">₹500.00</td>
-            </tr> */}
-          {renderProductListing}
-        </tbody>
+        <tbody>{renderProductListing}</tbody>
       </table>
     </section>
   );

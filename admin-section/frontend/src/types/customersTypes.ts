@@ -1,6 +1,6 @@
 export type Customer = {
-    customerId: string;
-    userId: string;
-    name: string;
-    email: string;
+    customer_id: string;
+    registered_user_id: string;
+    customer_name: string;
+    phone_number: string;
 }

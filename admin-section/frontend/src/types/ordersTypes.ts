@@ -1,15 +1,9 @@
-export type Order = {
-    orderId: string;
-    sellerId: string;
-    customerId: string;
-    order_date: Date;
-    order_address: string;
-    payment_mode: payment_mode;
-    status: order_status;
-    estimate_delivery: Date;
-    actual_delivery: Date;
-    total_price: number;
-}
+import { payment_status } from "./otherTypes";
 
-type payment_mode = "COD" | "credit_card" | "debit_card" | "UPI"
-type order_status = "pending" | "shipped" | "delivered"
+export type Order = {
+    order_id: string;
+    customer_id: string;
+    order_date: Date;
+    payment_status: payment_status;
+    total_amount: number;
+}

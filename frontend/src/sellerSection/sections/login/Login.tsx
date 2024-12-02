@@ -1,51 +1,88 @@
-import { Form, Link, redirect, useActionData } from "react-router-dom"
+import { Form, Link, redirect, useActionData } from "react-router-dom";
 
-export async function action({ request }: {request: Request}) {
-    const formData = await request.formData();
-    const response = await fetch("http://localhost:5000/seller/login",{
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json", // Ensure the server knows you're sending JSON
-        },
-        body: JSON.stringify({
-            email: formData.get("email"),
-            password: formData.get("password")
-        })
-    })
+export async function action({ request }: { request: Request }) {
+  const formData = await request.formData();
+  const response = await fetch("http://localhost:5000/seller/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json", // Ensure the server knows you're sending JSON
+    },
+    body: JSON.stringify({
+      email: formData.get("email"),
+      password: formData.get("password"),
+    }),
+  });
 
-    // if(response.status === 200) return redirect('/panel/seller/');
-    const parsedResponse = await response.json();
-    const jwtToken = parsedResponse.jwtToken
-    localStorage.setItem('jwtToken', JSON.stringify(jwtToken))
-    console.log(parsedResponse)
-    console.log("hello peh")
-    return redirect('/panel/seller/');
+  const parsedResponse = await response.json();
+  const jwtToken = parsedResponse.jwtToken;
+  localStorage.setItem("jwtToken", JSON.stringify(jwtToken));
+  console.log(parsedResponse);
+  console.log("hello peh");
+  return redirect("/panel/seller/");
 }
 
-export default function Login () {
-    
-    const actionData = useActionData() as {
-        message?: string,
-        error?: string
-    }
+export default function Login() {
+  const actionData = useActionData() as {
+    message?: string;
+    error?: string;
+  };
 
-    return (
-        <section className="flex w-full flex-col justify-center items-center ">
-            <p>{actionData?.message || "Hello Mrs. Raichand"}</p>
-            <Form className="p-4 max-w-[30rem] border" method="post">
-                <p className="mt-4">
-                    Email: 
-                    <input className="border" required type="email" name="email" id="email" />
-                </p>
-                <p className="mt-4">
-                    password
-                    <input className="border" required type="password" name="password" id="password" />
-                </p>
-                <p className="mt-4">
-                    <button className=" active:outline-2 hover:scale-x-[1.025] py-1 w-full bg-lighterAccent text-white " type="submit">Login</button>
-                </p>
-            </Form >
-            <p>Don't have an Account? <Link to={'/panel/seller/register'} className="text-accent font-bold underline hover:no-underline">Register</Link></p>
-        </section>
-    )
+  return (
+    <section className="flex w-full flex-col justify-center items-center min-h-screen bg-background">
+      <p className="text-accent text-xl font-semibold mb-6">
+        {actionData?.message || "Welcome"}
+      </p>
+      <Form
+        className="p-6 w-full max-w-md border-2 border-accent bg-lighterYellowish rounded-lg shadow-lg"
+        method="post"
+      >
+        <p className="mt-4">
+          <label htmlFor="email" className="block text-accent font-medium mb-2">
+            Email:
+          </label>
+          <input
+            className="w-full border border-accent rounded-md p-2 text-accent focus:ring-2 focus:ring-accent outline-none"
+            required
+            type="email"
+            name="email"
+            id="email"
+            placeholder="Enter your email"
+          />
+        </p>
+        <p className="mt-4">
+          <label
+            htmlFor="password"
+            className="block text-accent font-medium mb-2"
+          >
+            Password:
+          </label>
+          <input
+            className="w-full border border-accent rounded-md p-2 text-accent focus:ring-2 focus:ring-accent outline-none"
+            required
+            type="password"
+            name="password"
+            id="password"
+            placeholder="Enter your password"
+          />
+        </p>
+        <p className="mt-6">
+          <button
+            className="w-full py-2 bg-accent text-white font-medium rounded-md hover:bg-lighterAccent transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-lighterAccent focus:ring-offset-2"
+            type="submit"
+          >
+            Login
+          </button>
+        </p>
+      </Form>
+      <p className="mt-6 text-accent">
+        Don&apos;t have an Account?{" "}
+        <Link
+          to={"/panel/seller/register"}
+          className="font-bold underline text-orangeee hover:no-underline hover:text-lighterAccent"
+        >
+          Register
+        </Link>
+      </p>
+    </section>
+  );
 }

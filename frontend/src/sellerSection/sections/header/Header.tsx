@@ -1,31 +1,39 @@
 import { Link } from "react-router-dom";
 export default function Header() {
-    return (
-        <section>
-            <header className="flex justify-around py-3">
-        <img className="w-[10rem]" src="/main-logo.png" alt="main logo" />
+  return (
+    <section className="bg-background">
+      <header className="flex justify-between items-center py-4 px-6 border-b-2 border-accent">
+        {/* Logo */}
+        <img className="w-40" src="/main-logo.png" alt="Main Logo" />
+
+        {/* Navigation */}
         <nav>
-          <ul className=" w-[25rem] flex border justify-evenly">
+          <ul className="flex space-x-6">
             <li>
-              <Link replace to={"/panel/seller/"}>
-                <span>Products Listing</span>
+              <Link
+                replace
+                to={"/panel/seller/"}
+                className="text-accent font-medium hover:text-lighterAccent transition-colors"
+              >
+                Products Listing
               </Link>
             </li>
             <li>
-              <Link replace to={"/panel/seller/orders"}>
-                <span>Orders</span>
-              </Link>
-            </li>
-            <li>
-              <Link replace to={"/panel/seller/reviews"}>
-                <span>Reviews</span>
+              <Link
+                replace
+                to={"/panel/seller/orders"}
+                className="text-accent font-medium hover:text-lighterAccent transition-colors"
+              >
+                Orders
               </Link>
             </li>
           </ul>
         </nav>
-        <Link to={"/panel/seller/profile"}>
+
+        {/* Profile Icon */}
+        <Link to={"/panel/seller/profile"} className="hover:text-lighterAccent">
           <svg
-            className="w-[1.4rem] text-yellowish"
+            className="w-6 h-6 text-yellowish transition-colors duration-300"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 448 512"
           >
@@ -36,6 +44,6 @@ export default function Header() {
           </svg>
         </Link>
       </header>
-        </section>
-    )
+    </section>
+  );
 }

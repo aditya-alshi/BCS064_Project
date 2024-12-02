@@ -1,51 +1,90 @@
 const express = require("express");
 const app = express();
-const cors = require('cors');
-const cookieParser = require('cookie-parser')
-// app.use(cors());
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const path = require("path");
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(cors());
-app.use(express.json())
-const { getAllProducts, addNewProduct, getProductById } = require("./controllers/productController");
+app.use(express.json());
+const {
+  getAllProducts,
+  addNewProduct,
+  getProductById,
+} = require("./controllers/productController");
 const { Products, ProductImage } = require("./models/productModel");
-const { validateUserLogin, registerSeller } = require("./controllers/userController");
-const { verifySellerLoginMW } = require("./lib/middleware");
+const {
+  validateUserLogin,
+  registerSeller,
+  registerCustomer,
+  validateCustomerLogin,
+} = require("./controllers/userController");
+const {
+  verifySellerLoginMW,
+  verifyCustomerLoginMW,
+} = require("./lib/middleware");
 
-const multer  = require('multer')
-const upload = multer({ dest: './public/data/uploads/' })
+const multer = require("multer");
+const {
+  orderCheckout,
+  fetchOrderItemsBySellerId,
+} = require("./controllers/orderController");
+const {
+  createAnPaymentOrder,
+  verifyPayment,
+} = require("./controllers/paymentController");
+const {
+  addNewReview,
+  getReviewsById,
+} = require("./controllers/reviewController");
+const {
+  fetchAllProductsBySellerId,
+} = require("./controllers/sellerController");
+const upload = multer({ dest: "./public/data/uploads/" });
 
-// NEED TO BUILD BASIC AUTHENTICATION
-    // build a middleware for validating login(check backend\lib\middleware.js)
+// Product
+app.get("/all-products/:pageNo", getAllProducts);
+app.get("/product/detail/:productId", getProductById);
+app.get("/product/review/:productId", getReviewsById);
+app.post("/product/review", verifyCustomerLoginMW, addNewReview);
 
+// Customer
+app.post("/customer/regiter", registerCustomer);
+app.post("/customer/login", validateCustomerLogin);
 
-app.get("/all-products", getAllProducts);
-app.get('/product/detail/:productId', getProductById);
+// Order
+app.post("/order/checkout", verifyCustomerLoginMW, orderCheckout);
 
-app.post('/seller/login', validateUserLogin);
+// Payment
+app.post(
+  "/create-order",
+  bodyParser.json(),
+  bodyParser.urlencoded({ extended: true }),
+  express.static(path.join(__dirname)),
+  createAnPaymentOrder
+);
+app.post(
+  "/verify-payment",
+  bodyParser.json(),
+  bodyParser.urlencoded({ extended: true }),
+  express.static(path.join(__dirname)),
+  verifyPayment
+);
 
-app.post('/seller/register', registerSeller);
+// Seller
+app.post("/seller/login", validateUserLogin);
 
-app.post('/seller/addNewProduct',verifySellerLoginMW, upload.single('productImage'), addNewProduct)
+app.post("/seller/register", registerSeller);
 
-app.get('/joker/token', verifySellerLoginMW, (req, res) => {
-    console.log(req.user);
-})
+app.post(
+  "/seller/addNewProduct",
+  verifySellerLoginMW,
+  upload.single("productImage"),
+  addNewProduct
+);
 
-// app.post('/seller/editprofile', )
-
-// app.get('/seller/profile', getSellerProfile);
-
-app.get('/joker', (req, res) => {
-    try {
-        Products.oneProduct("GULABJAMUN_2",(error, results) => {
-            if (error) throw error;
-            res.status(200).json(results[0]);
-          })
-    } catch(error) {
-        res.status(500).json({
-            error: error.message
-        })
-    }
-})
+app.get("/seller/products", verifySellerLoginMW, fetchAllProductsBySellerId);
+app.get("/seller/orders", verifySellerLoginMW, fetchOrderItemsBySellerId);
 
 module.exports = {
   app,
