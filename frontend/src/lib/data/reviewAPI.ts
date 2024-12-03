@@ -1,3 +1,5 @@
+import { domain } from "../utils/domain";
+
 export async function sendReview(formData: FormData) {
     const completeReviewObject = Array.from(formData.entries()).reduce((acc, [key, value]) => {
         acc[key] = value;
@@ -7,7 +9,7 @@ export async function sendReview(formData: FormData) {
       try{
           const jwtCustomerToken = JSON.parse(localStorage.getItem('jwtCustomerToken') || "")
           const body = JSON.stringify(completeReviewObject)
-          const response: Response  = await fetch('http://13.234.75.74:3000/product/review', {
+          const response: Response  = await fetch(`${domain}/product/review`, {
               method: "POST",
               headers: {
                     'Content-Type' : "application/json",
@@ -28,7 +30,7 @@ export async function sendReview(formData: FormData) {
 
 export async function getReviewById(productId: string) {
     try{
-        const response = await fetch(`http://13.234.75.74:3000/product/review/${productId}`)
+        const response = await fetch(`${domain}/product/review/${productId}`)
         const parsedResponse = await response.json();
         if(parsedResponse.error) {
             throw new Error(parsedResponse.error)

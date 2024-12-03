@@ -1,11 +1,12 @@
 import { CartItem } from "../types/cartTypes";
+import { domain } from "../utils/domain";
 
 export async function proceedToCheckOut(payload : { cart: CartItem[], totalAmount: number }) {
     try {
 
         const jwtCustomerToken = JSON.parse(localStorage.getItem('jwtCustomerToken') || "")
         const body = JSON.stringify(payload)
-        const response = await fetch(`http://13.234.75.74:3000/order/checkout`, {
+        const response = await fetch(`${domain}/order/checkout`, {
             method: 'POST',
             headers : {
                 'Content-Type' : "application/json",

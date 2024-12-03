@@ -5,6 +5,7 @@ import {
   useActionData,
   useNavigate,
 } from "react-router-dom";
+import { domain } from "../../../lib/utils/domain";
 
 export async function action({ request }: { request: Request }) {
   const formdata = await request.formData();
@@ -18,7 +19,7 @@ export async function action({ request }: { request: Request }) {
 
   const body = JSON.stringify(formEntires);
 
-  const response = await fetch("http://13.234.75.74:3000/seller/register", {
+  const response = await fetch(`${domain}/seller/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json", // Ensure the server knows you're sending JSON

@@ -1,0 +1,1 @@
+export const domain = "13.234.75.74:3000"

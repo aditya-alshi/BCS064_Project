@@ -1,8 +1,9 @@
 import { Form, Link, redirect, useActionData } from "react-router-dom";
+import { domain } from "../../../lib/utils/domain";
 
 export async function action({ request }: { request: Request }) {
   const formData = await request.formData();
-  const response = await fetch("http://13.234.75.74:3000/seller/login", {
+  const response = await fetch(`${domain}/seller/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json", // Ensure the server knows you're sending JSON

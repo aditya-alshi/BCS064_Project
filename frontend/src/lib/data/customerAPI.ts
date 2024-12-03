@@ -1,10 +1,12 @@
 import { CartItem } from "../types/cartTypes";
 import { Customer } from "../types/customerTypes";
+import { domain } from "../utils/domain";
+
 
 export async function registerCustomer(data: Record<string, FormDataEntryValue>) {
     const body = JSON.stringify(data)
     try {
-        const response = await fetch(`http://13.234.75.74:3000/customer/regiter`, {
+        const response = await fetch(`${domain}/customer/regiter`, {
             method: "POST", 
             headers: {
                 "Content-Type": "application/json"
@@ -25,7 +27,7 @@ export async function registerCustomer(data: Record<string, FormDataEntryValue>)
 
 export async function loginCustomer(formData: FormData) :Promise<{ error?: string; message?: string }> {
     try {
-        const response = await fetch("http://13.234.75.74:3000/customer/login",{
+        const response = await fetch(`${domain}/customer/login`,{
             method: "POST",
             headers: {
                 "Content-Type": "application/json", // Ensure the server knows you're sending JSON
