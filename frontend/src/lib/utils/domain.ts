@@ -1,2 +1,2 @@
-export const domain = "https://13.234.75.74:3000"
+export const domain = "https://indiansweetsavories.alshiaditya.com:3000"
 // export const domain = "http://localhost:5000"
