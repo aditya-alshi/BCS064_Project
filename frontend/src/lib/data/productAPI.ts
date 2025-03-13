@@ -30,7 +30,7 @@ export async function getAllProducts(pageNo: number) {
 
     } catch (error) {
         if(error instanceof Error) {
-            return "Soemthing went wrong: " + error.message
+            return "Something went wrong: AWS alshiaditya55 account was suspended due to non-payment of outstanding balance due on your account, you can pay now using the Payments to reactivate your account. If you do not pay or provide a payment method to resolve your outstanding balance, your account resources may be terminated. " + error.message
         }
         return "Something went wrong"
     }
