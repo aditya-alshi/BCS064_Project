@@ -1,4 +1,4 @@
-# E-Commerce Platform
+# Indian Sweets and Savories
 
 ## Table of Contents
 
